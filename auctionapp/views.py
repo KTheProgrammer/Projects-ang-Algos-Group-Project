@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import bcrypt
-from .models import User
+from .models import User, Item
 # Create your views here.
 
 def index(request):
@@ -26,7 +26,7 @@ def create_account(request):
         password = hashed_pw,
     )
     request.session['user_id'] = new_user.id 
-    return redirect('/dashboard')
+    return redirect('/marketplace')
 
 def login(request):
     if request.method != 'POST':
@@ -39,15 +39,36 @@ def login(request):
     this_user = User.objects.filter(email=request.POST['email'])[0]  ##index 0 to find the ONE user
     if bcrypt.checkpw(request.POST['password'].encode(), this_user.password.encode()):
         request.session['user_id'] = this_user.id
-        return redirect('/dashboard')
+        return redirect('/marketplace')
     messages.error(request, "Please enter a valid email and password")
     return redirect('/')
 
-def dashboard(request):
-    if 'user_id' not in request.session:
-        return redirect('/')
+def logout(request):
+    request.session.clear()
+    return redirect('/')
+
+def marketplace(request):
     user = User.objects.get(id=request.session['user_id'])
     context = {
+        'items':Item.objects.all(),
         'user' : user,
     }
-    return render(request, 'dashboard.html', context)
+    return render(request, 'marketplace.html', context)
+
+def create(request):
+    Item.objects.create(
+        item_brand =request.POST['item_brand'],
+        product_name =request.POST['product_name'],
+        item_price =request.POST['item_price'],
+        contact_info =request.POST['contact_info'],
+        item_description =request.POST['item_description'],
+        owner = User.objects.get(id=request.session['user_id'])
+    )
+    return redirect('/marketplace')
+
+def delete(request, item_id):
+    my_delete = Item.objects.get(id=item_id)
+    my_delete.delete()
+    return redirect('/marketplace')
+
+
