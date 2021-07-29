@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace</title>
+    {% load static %}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        h1, h2, table, li {
+            margin: 20px;
+        }
+        .wrapper {
+            max-width: 600px;
+            height: 100vh;
+            margin: auto;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar nav-expand-sm bg-primary nav-dark">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a style="color: aliceblue;" class="navbar-brand" href="/marketplace">EASY AUCTION</a>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/marketplace"><button class="btn btn-success btn-sm">Home</button></a></li>
+            <li><a href="#"><button class="btn btn-success btn-sm">Blog</button></a></li>
+            <li><a href="/logout"><button class="btn btn-success btn-sm">Logout</button></a></li>
+            <li><a href="#"><button class="btn btn-success btn-sm">My Account</button></a></li>
+            <li><a href="#"><button class="btn btn-success btn-sm">Invite Neighbor</button></a></li>
+        </div>
+      </nav>
+    <h1>Hello, {{user.first_name}}!!!</h1>
+    <h2>Items For Bid</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Seller Name</th>
+                <th>Price</th>
+                <th>Contact Information</th>  
+                <th>Description</th>
+                <th>Purchase</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.owner.first_name }}</td>
+                <td>${{ item.item_price }}</td>
+                <td>{{ item.contact_info }}</td>
+                <td>{{ item.item_description }}</td>
+                <td><button class="btn btn-success btn-sm" type="button"
+                    onclick="document.getElementById('{{ item.id }}')
+                    .innerHTML = 'Sold'">Buy</button></td>
+                <td><p id='{{ item.id }}'>Available</p></td>
+                <td><a href="/{{ item.id }}/delete">Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 style="text-align: center;">Add a Product:</h2>
+    <form class="wrapper" action="/create" method="POST">
+        {% csrf_token %}
+        <div class="form-control">
+            <label for="item_brand">Brand Name:</label>
+            <input type="text" name="item_brand" id="item_brand" required>
+        </div>
+        <div class="form-control">
+            <label for="product_name">Product Name:</label>
+            <input type="text" name="product_name" id="product_name" required>
+        </div>
+        <div class="form-control">
+            <label for="item_price">Price:</label>
+            <input type="text" name="item_price" id="item_price" required>
+        </div>
+        <div class="form-control">
+            <label for="contact_info">Contact Info:</label>
+            <input type="text" name="contact_info" id="contact_info" required>
+        </div>
+        <div class="form-control">
+            <label for="item_description">Description:</label>
+            <input type="text" name="item_description" id="item_description" required>
+        </div>
+        <button class="btn btn-warning">Add</button>
+    </form>
+    <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+
+        <hr class="my-4">
+    
+        <!-- Social icons -->
+        <div class="pb-4">
+          <a href="#" target="_blank">
+            <i class="fab fa-facebook-f mr-3"></i>
+          </a>
+    
+          <a href="#" target="_blank">
+            <i class="fab fa-twitter mr-3"></i>
+          </a>
+    
+          <a href="#" target="_blank">
+            <i class="fab fa-github mr-3"></i>
+          </a>
+          <a href="#" target="_blank">
+            <i class="fab fa-instagram mr-3"></i>
+          </a>
+          <a href="#" target="_blank">
+            <i class="fab fa-linkedin mr-3"></i>
+          </a>
+        </div>
+        <!-- Social icons -->
+    
+        <!--Copyright-->
+        <div class="footer-copyright py-3">
+          © 2021 Copyright:
+          <a href="/"> Auction House </a>
+        </div>
+        <!--/.Copyright-->
+    
+    </footer>
+      <!--/.Footer-->
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
