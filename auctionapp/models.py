@@ -103,7 +103,7 @@ class Item(models.Model):
     item_price = models.IntegerField(max_length=8)
     contact_info = models.CharField(max_length=255)
     item_brand = models.CharField(max_length=45)
-    owner = models.ForeignKey(User, related_name="has_created_item", on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name="items", on_delete=models.CASCADE)
     sold = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
